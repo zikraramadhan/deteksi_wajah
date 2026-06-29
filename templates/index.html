@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deteksi Wajah MTCNN</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📸 Deteksi & Penghitung Wajah</h1>
+            <p class="subtitle">Unggah foto grup Anda dan biarkan AI mendeteksi setiap wajah dengan akurat</p>
+        </header>
+
+        <main>
+            {% if error %}
+            <div class="alert alert-error">{{ error }}</div>
+            {% endif %}
+
+            <form action="/detect" method="post" enctype="multipart/form-data" id="upload-form">
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">⬆️</div>
+                    <p class="upload-text">Seret & letakkan foto di sini<br>atau klik untuk memilih</p>
+                    <p class="upload-hint">Format: JPG, PNG, BMP (maks. 10MB)</p>
+                    <input type="file" name="image" id="file-input" accept="image/*" required hidden>
+                    <img id="preview" src="#" alt="Pratinjau Gambar" style="display: none;">
+                </div>
+
+                <button type="submit" class="btn-detect" id="btn-detect">
+                    <span id="btn-text">Deteksi Wajah</span>
+                    <span id="btn-loading" class="spinner" style="display: none;"></span>
+                </button>
+            </form>
+        </main>
+
+        <footer>
+            <p>Menggunakan MTCNN (Multi-task Cascaded Convolutional Networks)</p>
+        </footer>
+    </div>
+
+    <script>
+        // Handle drag & drop dan preview gambar
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const preview = document.getElementById('preview');
+        const uploadText = uploadArea.querySelector('.upload-text');
+        const uploadIcon = uploadArea.querySelector('.upload-icon');
+        const uploadHint = uploadArea.querySelector('.upload-hint');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', handleFile);
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+            handleFile();
+        });
+
+        function handleFile() {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    uploadText.style.display = 'none';
+                    uploadIcon.style.display = 'none';
+                    uploadHint.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Tampilkan spinner saat form dikirim
+        const form = document.getElementById('upload-form');
+        const btnDetect = document.getElementById('btn-detect');
+        const btnText = document.getElementById('btn-text');
+        const btnLoading = document.getElementById('btn-loading');
+
+        form.addEventListener('submit', function() {
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            btnDetect.disabled = true;
+        });
+    </script>
+</body>
+</html>

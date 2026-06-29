@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Deteksi Wajah</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📸 Hasil Deteksi Wajah</h1>
+        </header>
+
+        <main class="result-main">
+            <div class="result-summary">
+                <div class="count-box">
+                    <span class="count-number">{{ jumlah_wajah }}</span>
+                    <span class="count-label">Wajah Terdeteksi</span>
+                </div>
+                <p class="result-text">AI MTCNN berhasil mendeteksi <strong>{{ jumlah_wajah }}</strong> wajah pada foto yang Anda unggah.</p>
+            </div>
+
+            <div class="image-container">
+                <img src="data:image/jpeg;base64,{{ result_image }}" alt="Hasil Deteksi" class="result-image">
+            </div>
+
+            <div class="actions">
+                <a href="/" class="btn-back">← Unggah Foto Lain</a>
+                <a href="data:image/jpeg;base64,{{ result_image }}" download="hasil_deteksi.jpg" class="btn-download">💾 Unduh Gambar</a>
+            </div>
+        </main>
+
+        <footer>
+            <p>Menggunakan MTCNN (Multi-task Cascaded Convolutional Networks)</p>
+        </footer>
+    </div>
+</body>
+</html>
