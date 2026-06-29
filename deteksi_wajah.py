@@ -55,9 +55,9 @@ def detect():
         return render_template('index.html', error='Nama file kosong.')
 
     # Validasi ekstensi (opsional)
-    allowed_extensions = {'jpeg'}
+    allowed_extensions = {'jpg', 'jpeg', 'png'}
     if '.' in file.filename and file.filename.rsplit('.', 1)[1].lower() not in allowed_extensions:
-        return render_template('index.html', error='Format file tidak didukung. Gunakan PNG')
+        return render_template('index.html', error='Format file tidak didukung. Gunakan JPG, JPEG atau PNG')
 
     try:
         image_bytes = file.read()
